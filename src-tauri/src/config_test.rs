@@ -79,7 +79,7 @@ mod tests {
 
         // 验证禁用记录文件存在
         let switch_state: serde_json::Value =
-            serde_json::from_str(&fs::read_to_string(dir.join(".omo-switch.json")).unwrap()).unwrap();
+            serde_json::from_str(&fs::read_to_string(dir.join(".opm.json")).unwrap()).unwrap();
         let disabled = switch_state["disabled_plugins"].as_array().unwrap();
         assert_eq!(disabled.len(), 1);
         assert_eq!(disabled[0].as_str().unwrap(), "oh-my-openagent@latest");
@@ -107,7 +107,7 @@ mod tests {
 
         // 验证禁用记录已清空
         let switch_state: serde_json::Value =
-            serde_json::from_str(&fs::read_to_string(dir.join(".omo-switch.json")).unwrap()).unwrap();
+            serde_json::from_str(&fs::read_to_string(dir.join(".opm.json")).unwrap()).unwrap();
         let disabled = switch_state["disabled_plugins"].as_array().unwrap();
         assert_eq!(disabled.len(), 0);
     }

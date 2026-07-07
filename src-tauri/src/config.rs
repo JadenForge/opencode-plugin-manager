@@ -5,7 +5,7 @@
 //   - tui.json             TUI 配置，同样含 `plugin` 数组，需与主配置同步
 //   - oh-my-openagent.json 插件专属配置，含 agents / categories 的 model 字段
 // 以及一个本工具自己的状态文件：
-//   - .omo-switch.json     记录被“禁用”的插件（保留完整名，便于恢复）
+//   - .opm.json            记录被“禁用”的插件（保留完整名，便于恢复）
 
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
@@ -16,7 +16,8 @@ use crate::error::CmdResult;
 const OPENCODE_JSON: &str = "opencode.json";
 const TUI_JSON: &str = "tui.json";
 const OMA_JSON: &str = "oh-my-openagent.json";
-const STATE_JSON: &str = ".omo-switch.json";
+const STATE_JSON: &str = ".opm.json";
+const LEGACY_STATE_JSON: &str = ".omo-switch.json";
 
 // ---------- 对外数据结构 ----------
 
@@ -114,10 +115,21 @@ fn write_json(path: &Path, value: &Value) -> CmdResult<()> {
 // ---------- 状态文件（禁用记录）----------
 
 fn read_switch_state(dir: &Path) -> CmdResult<SwitchState> {
+    migrate_legacy_switch_state(dir)?;
+
     match read_json_opt(&dir.join(STATE_JSON))? {
         Some(v) => Ok(serde_json::from_value(v).unwrap_or_default()),
         None => Ok(SwitchState::default()),
     }
+}
+
+fn migrate_legacy_switch_state(dir: &Path) -> CmdResult<()> {
+    let legacy_path = dir.join(LEGACY_STATE_JSON);
+    let state_path = dir.join(STATE_JSON);
+    if legacy_path.exists() && !state_path.exists() {
+        std::fs::rename(legacy_path, state_path)?;
+    }
+    Ok(())
 }
 
 fn write_switch_state(dir: &Path, state: &SwitchState) -> CmdResult<()> {
@@ -494,7 +506,7 @@ mod tests {
 
         // 验证禁用记录文件存在
         let switch_state: serde_json::Value =
-            serde_json::from_str(&fs::read_to_string(dir.join(".omo-switch.json")).unwrap()).unwrap();
+            serde_json::from_str(&fs::read_to_string(dir.join(".opm.json")).unwrap()).unwrap();
         let disabled = switch_state["disabled_plugins"].as_array().unwrap();
         assert_eq!(disabled.len(), 1);
         assert_eq!(disabled[0].as_str().unwrap(), "oh-my-openagent@latest");
@@ -523,9 +535,32 @@ mod tests {
 
         // 验证禁用记录已清空
         let switch_state: serde_json::Value =
-            serde_json::from_str(&fs::read_to_string(dir.join(".omo-switch.json")).unwrap()).unwrap();
+            serde_json::from_str(&fs::read_to_string(dir.join(".opm.json")).unwrap()).unwrap();
         let disabled = switch_state["disabled_plugins"].as_array().unwrap();
         assert_eq!(disabled.len(), 0);
+    }
+
+    #[test]
+    fn test_load_state_migrates_legacy_switch_state() {
+        let tmp = setup_test_dir();
+        let dir = tmp.path();
+        let legacy_state = serde_json::json!({
+            "disabled_plugins": ["legacy-plugin@1.0.0"]
+        });
+        fs::write(
+            dir.join(".omo-switch.json"),
+            serde_json::to_string_pretty(&legacy_state).unwrap(),
+        )
+        .unwrap();
+
+        let state = load_state_in(dir).unwrap();
+
+        assert!(dir.join(".opm.json").exists());
+        assert!(!dir.join(".omo-switch.json").exists());
+        assert!(state
+            .plugins
+            .iter()
+            .any(|plugin| plugin.name == "legacy-plugin@1.0.0" && !plugin.enabled));
     }
 
     #[test]
