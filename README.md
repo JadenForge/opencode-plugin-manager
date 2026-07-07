@@ -2,7 +2,7 @@
 
 `opencode-plugin-manager` 是一个基于 Tauri + React 的 OpenCode 插件管理工具，用来查看、启用、禁用本机 OpenCode 插件，并管理 `oh-my-openagent` 的模型路由配置。
 
-当前版本：`0.3.1`
+当前版本：`0.4.2`
 
 ## 功能
 
@@ -64,16 +64,28 @@ bun run tauri build
 仓库包含 GitHub Actions 配置：
 
 - `CI`：推送到 `main` 或创建 pull request 时运行，执行前端构建和 Rust 测试。
-- `Release`：推送 `v*` 版本标签时运行，在 macOS、Linux 和 Windows 上构建 Tauri 安装包，并创建 GitHub draft release。
+- `Release`：推送 `v*` 版本标签时运行，构建 Apple Silicon macOS 安装包和 64 位 Windows 安装包，并创建 GitHub draft release。
 
 发布新版本时，先确认项目版本号已同步更新，然后创建并推送标签：
 
 ```bash
-git tag v0.3.1
-git push origin v0.3.1
+git tag v0.4.2
+git push origin v0.4.2
 ```
 
-GitHub 会自动创建草稿 release，并把各平台构建产物上传为附件。
+GitHub 会自动创建草稿 release，并上传 macOS Apple Silicon 与 Windows x64 构建产物。当前不构建 Linux 包、Intel Mac 包或 MSI 安装包。
+
+### 自动更新
+
+应用通过 Tauri updater 插件检查以下更新清单：
+
+```text
+https://github.com/JadenForge/opencode-plugin-manager/releases/latest/download/latest.json
+```
+
+应用内已配置 updater 公钥。Release workflow 需要在 GitHub Secrets 中配置匹配的 `TAURI_SIGNING_PRIVATE_KEY`，如私钥设置了密码，还需要配置 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`。
+
+Release workflow 会在 macOS 与 Windows 构建中额外生成 updater bundle 与 `.sig` 签名文件，并在 `publish-manifest` job 中自动生成 `latest.json` 上传到同一个 GitHub release。客户端检查更新时会读取 `releases/latest/download/latest.json`，并使用内置公钥验证对应平台的签名。私钥只能放在 GitHub Secrets 或本机密钥文件中，不能提交到仓库。
 
 ## 技术栈
 
