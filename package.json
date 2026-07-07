@@ -1,5 +1,5 @@
 {
-  "name": "tauri-app",
+  "name": "opencode-plugin-manager",
   "private": true,
   "version": "0.1.0",
   "type": "module",

@@ -11,6 +11,8 @@ import "@/App.css";
 
 type ViewMode = "plugins" | "settings";
 
+const APP_VERSION = "0.1.0";
+
 const App = () => {
   const [state, setState] = useState<AppState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -124,6 +126,9 @@ const App = () => {
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <FolderCog className="size-3.5" />
               OMO Switch
+              <Badge variant="outline" className="h-5 px-1.5 font-mono text-[10px]">
+                v{APP_VERSION}
+              </Badge>
             </div>
             <h1 className="mt-1 text-xl font-semibold tracking-tight">OpenCode 插件控制台</h1>
             <p className="mt-1 truncate text-xs text-muted-foreground">{state.config_dir}</p>
