@@ -11,7 +11,7 @@ import "@/App.css";
 
 type ViewMode = "plugins" | "settings";
 
-const APP_VERSION = "0.2.0";
+const APP_VERSION = "0.3.0";
 
 const App = () => {
   const [state, setState] = useState<AppState | null>(null);
