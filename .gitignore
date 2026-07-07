@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 .omo/
+.tauri/
+*.pem
+*.key
+*.key.pub
 
 # Editor directories and files
 .vscode/*
