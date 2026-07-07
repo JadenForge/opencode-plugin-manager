@@ -1,7 +1,75 @@
-# Tauri + React + Typescript
+# opencode-plugin-manager
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+`opencode-plugin-manager` 是一个基于 Tauri + React 的 OpenCode 插件管理工具，用来查看、启用、禁用本机 OpenCode 插件，并管理 `oh-my-openagent` 的模型路由配置。
 
-## Recommended IDE Setup
+当前版本：`0.1.0`
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## 功能
+
+- 读取 `~/.config/opencode/opencode.json` 中的插件列表。
+- 同步维护 `opencode.json` 与 `tui.json` 的 `plugin` 配置。
+- 启用或禁用插件，禁用状态记录在 `~/.config/opencode/.omo-switch.json`。
+- 识别插件名称中的版本号，例如 `oh-my-openagent@latest`。
+- 读取 `opencode.json` 中的 provider/model，作为可选模型列表。
+- 管理 `oh-my-openagent.json` 中 agents 与 categories 的 `model` 字段。
+- 从界面直接打开 OpenCode 相关配置文件。
+
+## 配置文件
+
+工具默认读取当前用户目录下的 OpenCode 配置：
+
+```text
+~/.config/opencode/opencode.json
+~/.config/opencode/tui.json
+~/.config/opencode/oh-my-openagent.json
+~/.config/opencode/.omo-switch.json
+```
+
+其中 `.omo-switch.json` 由本工具维护，用于保存被禁用但仍可恢复的插件名称。
+
+## 开发
+
+安装依赖：
+
+```bash
+bun install
+```
+
+启动前端开发服务：
+
+```bash
+bun run dev
+```
+
+启动 Tauri 应用：
+
+```bash
+bun run tauri dev
+```
+
+构建前端：
+
+```bash
+bun run build
+```
+
+构建桌面应用：
+
+```bash
+bun run tauri build
+```
+
+## 技术栈
+
+- Tauri 2
+- React 19
+- TypeScript
+- Tailwind CSS
+- Radix UI
+- lucide-react
+
+## 注意事项
+
+- 工具会写入 OpenCode 配置文件，建议在修改前确认配置已备份或已纳入版本管理。
+- 禁用插件不会删除插件名称，而是从启用列表移除并记录到 `.omo-switch.json`，方便之后恢复。
+- 当前应用仅操作本机 `~/.config/opencode` 下的配置，不会自动同步远程仓库。
