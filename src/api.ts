@@ -1,6 +1,8 @@
 // Tauri 后端类型定义与 API 封装层。
 
 import { invoke } from "@tauri-apps/api/core";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check, type Update } from "@tauri-apps/plugin-updater";
 
 export interface PluginItem {
   name: string;
@@ -48,4 +50,10 @@ export const api = {
   
   openConfigFile: (fileName: string) =>
     invoke<void>("open_config_file", { fileName }),
+
+  checkForUpdate: () => check(),
+
+  installUpdate: (update: Update) => update.downloadAndInstall(),
+
+  relaunchApp: () => relaunch(),
 };
