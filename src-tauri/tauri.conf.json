@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "omo-switch",
-  "version": "0.1.0",
-  "identifier": "com.omoswitch.app",
+  "productName": "opencode-plugin-manager",
+  "version": "0.2.0",
+  "identifier": "com.jadenforge.opencode-plugin-manager",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "OMO Switch",
+        "title": "opencode-plugin-manager",
         "width": 960,
         "height": 720,
         "minWidth": 720,

@@ -11,7 +11,7 @@ import "@/App.css";
 
 type ViewMode = "plugins" | "settings";
 
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.2.0";
 
 const App = () => {
   const [state, setState] = useState<AppState | null>(null);
@@ -125,7 +125,7 @@ const App = () => {
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <FolderCog className="size-3.5" />
-              OMO Switch
+              opencode-plugin-manager
               <Badge variant="outline" className="h-5 px-1.5 font-mono text-[10px]">
                 v{APP_VERSION}
               </Badge>

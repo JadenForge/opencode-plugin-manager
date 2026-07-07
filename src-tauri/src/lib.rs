@@ -1,9 +1,9 @@
-// omo-switch: 管理 opencode 插件与 oh-my-openagent 配置的桌面工具后端。
+// opencode-plugin-manager: 管理 opencode 插件与 oh-my-openagent 配置的桌面工具后端。
 //
 // 设计要点：
 // - opencode.json / tui.json 的 `plugin` 数组只保存“启用中”的插件。
 // - 被禁用的插件不会从数组直接删除后丢失，而是记录到独立状态文件
-//   `~/.config/opencode/.omo-switch.json` 中，随时可恢复。
+//   `~/.config/opencode/.opm.json` 中，随时可恢复。
 // - 所有 JSON 写回均保留原有键顺序（serde_json preserve_order feature）。
 
 mod config;
