@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "opencode-plugin-manager",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "identifier": "com.jadenforge.opencode-plugin-manager",
   "build": {
     "beforeDevCommand": "bun run dev",
@@ -37,7 +37,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdBOUQ1NTlBOEE2MkE4QTEKUldTaHFHS0ttbFdkZW1YMGxYQy9ja3ZVcktsa1gwZURYTkk1UzlCVWlqOFl4TzgrMGJaLzRiKzMK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM1MzU0MDEwNDMzNUFGMTMKUldRVHJ6VkRFRUExeGNvRFJ4blJ0eEttQTQrL3R3MEhOQnFWQ2Z5aTdvTFVHblhzVllLS3k2VVIK",
       "endpoints": [
         "https://github.com/JadenForge/opencode-plugin-manager/releases/latest/download/latest.json"
       ]
