@@ -12,7 +12,7 @@ import "@/App.css";
 
 type ViewMode = "plugins" | "settings";
 
-const APP_VERSION = "0.4.4";
+const APP_VERSION = "0.4.5";
 
 const App = () => {
   const [state, setState] = useState<AppState | null>(null);
