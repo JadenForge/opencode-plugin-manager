@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, test } from "bun:test";
@@ -75,6 +75,34 @@ describe("generateLatestJson", () => {
       expect(latest.platforms["windows-x86_64"]).toEqual({
         signature: "MOCK_SIG_NSIS",
         url: "https://github.com/JadenForge/opencode-plugin-manager/releases/download/v0.4.5/opencode-plugin-manager_0.4.5_x64-setup.exe",
+      });
+    } finally {
+      await rm(tempDir, { force: true, recursive: true });
+    }
+  });
+
+  test("recognizes macOS updater artifacts by artifact directory", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "latest-json-macos-layout-"));
+
+    try {
+      const macosDir = join(tempDir, "updater-aarch64-apple-darwin", "macos");
+      const archivePath = join(macosDir, "opencode-plugin-manager.app.tar.gz");
+      await mkdir(macosDir, { recursive: true });
+      await writeFile(archivePath, "tar");
+      await writeFile(`${archivePath}.sig`, "MOCK_SIG_MAC_LAYOUT");
+
+      const latest = await generateLatestJson({
+        downloads: tempDir,
+        notes: "Release notes",
+        out: null,
+        pubDate: "2026-07-07T00:00:00.000Z",
+        repo: "JadenForge/opencode-plugin-manager",
+        version: "0.4.5",
+      });
+
+      expect(latest.platforms["darwin-aarch64"]).toEqual({
+        signature: "MOCK_SIG_MAC_LAYOUT",
+        url: "https://github.com/JadenForge/opencode-plugin-manager/releases/download/v0.4.5/opencode-plugin-manager.app.tar.gz",
       });
     } finally {
       await rm(tempDir, { force: true, recursive: true });

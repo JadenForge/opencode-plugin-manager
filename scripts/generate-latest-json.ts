@@ -81,12 +81,12 @@ const isArchive = (path: string) => {
   return path.endsWith(".tar.gz") || path.endsWith(".zip") || path.endsWith(".exe");
 };
 
-const platformKeyFor = (fileName: string) => {
-  if (fileName.includes("aarch64-apple-darwin")) {
+const platformKeyFor = (artifactPath: string) => {
+  if (artifactPath.includes("aarch64-apple-darwin")) {
     return "darwin-aarch64";
   }
 
-  if (fileName.includes("x86_64-pc-windows-msvc") || fileName.endsWith("_x64-setup.exe")) {
+  if (artifactPath.includes("x86_64-pc-windows-msvc") || artifactPath.endsWith("_x64-setup.exe")) {
     return "windows-x86_64";
   }
 
@@ -104,7 +104,8 @@ export const generateLatestJson = async (options: CliOptions): Promise<LatestJso
 
   for (const archive of archives) {
     const assetName = basename(archive);
-    const platformKey = platformKeyFor(assetName);
+    const artifactPath = relative(options.downloads, archive);
+    const platformKey = platformKeyFor(artifactPath);
 
     if (platformKey === null) {
       continue;
@@ -113,7 +114,7 @@ export const generateLatestJson = async (options: CliOptions): Promise<LatestJso
     const signaturePath = `${archive}.sig`;
 
     if (!files.includes(signaturePath)) {
-      throw new Error(`Missing signature for ${relative(options.downloads, archive)}.`);
+      throw new Error(`Missing signature for ${artifactPath}.`);
     }
 
     platforms[platformKey] = {
