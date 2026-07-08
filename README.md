@@ -2,7 +2,7 @@
 
 `opencode-plugin-manager` 是一个基于 Tauri + React 的 OpenCode 插件管理工具，用来查看、启用、禁用本机 OpenCode 插件，并管理 `oh-my-openagent` 的模型路由配置。
 
-当前版本：`0.4.3`
+当前版本：`0.4.4`
 
 ## 功能
 
@@ -69,8 +69,8 @@ bun run tauri build
 发布新版本时，先确认项目版本号已同步更新，然后创建并推送标签：
 
 ```bash
-git tag v0.4.3
-git push origin v0.4.3
+git tag v0.4.4
+git push origin v0.4.4
 ```
 
 GitHub 会自动创建草稿 release，并上传 macOS Apple Silicon 与 Windows x64 构建产物。当前不构建 Linux 包、Intel Mac 包或 MSI 安装包。
