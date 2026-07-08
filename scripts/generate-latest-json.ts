@@ -78,7 +78,7 @@ const isArchive = (path: string) => {
     return false;
   }
 
-  return path.endsWith(".tar.gz") || path.endsWith(".zip");
+  return path.endsWith(".tar.gz") || path.endsWith(".zip") || path.endsWith(".exe");
 };
 
 const platformKeyFor = (fileName: string) => {
@@ -86,7 +86,7 @@ const platformKeyFor = (fileName: string) => {
     return "darwin-aarch64";
   }
 
-  if (fileName.includes("x86_64-pc-windows-msvc")) {
+  if (fileName.includes("x86_64-pc-windows-msvc") || fileName.endsWith("_x64-setup.exe")) {
     return "windows-x86_64";
   }
 

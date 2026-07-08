@@ -89,6 +89,8 @@ jobs:
             src-tauri/target/${{ matrix.target }}/release/bundle/**/*.tar.gz.sig
             src-tauri/target/${{ matrix.target }}/release/bundle/**/*.zip
             src-tauri/target/${{ matrix.target }}/release/bundle/**/*.zip.sig
+            src-tauri/target/${{ matrix.target }}/release/bundle/**/*.exe
+            src-tauri/target/${{ matrix.target }}/release/bundle/**/*.exe.sig
           if-no-files-found: error
           retention-days: 1
 

@@ -55,6 +55,32 @@ describe("generateLatestJson", () => {
     }
   });
 
+  test("recognizes Windows NSIS exe updater artifacts", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "latest-json-nsis-"));
+
+    try {
+      const exePath = join(tempDir, "opencode-plugin-manager_0.4.5_x64-setup.exe");
+      await writeFile(exePath, "exe");
+      await writeFile(`${exePath}.sig`, "MOCK_SIG_NSIS");
+
+      const latest = await generateLatestJson({
+        downloads: tempDir,
+        notes: "Release notes",
+        out: null,
+        pubDate: "2026-07-07T00:00:00.000Z",
+        repo: "JadenForge/opencode-plugin-manager",
+        version: "0.4.5",
+      });
+
+      expect(latest.platforms["windows-x86_64"]).toEqual({
+        signature: "MOCK_SIG_NSIS",
+        url: "https://github.com/JadenForge/opencode-plugin-manager/releases/download/v0.4.5/opencode-plugin-manager_0.4.5_x64-setup.exe",
+      });
+    } finally {
+      await rm(tempDir, { force: true, recursive: true });
+    }
+  });
+
   test("fails when a recognized archive is missing its signature", async () => {
     const tempDir = await mkdtemp(join(tmpdir(), "latest-json-missing-sig-"));
 
